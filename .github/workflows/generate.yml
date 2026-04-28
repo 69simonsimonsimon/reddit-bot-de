@@ -1,11 +1,6 @@
 name: Generate Reddit Videos (DE)
 
 on:
-  schedule:
-    - cron: '0 6 * * *'   # 06:00 UTC
-    - cron: '0 10 * * *'  # 10:00 UTC
-    - cron: '0 14 * * *'  # 14:00 UTC
-    - cron: '0 19 * * *'  # 19:00 UTC
   workflow_dispatch:
 
 jobs:
