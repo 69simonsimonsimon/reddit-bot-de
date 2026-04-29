@@ -79,14 +79,6 @@ def text_to_speech(text: str, output_path: str, topic: str = "") -> tuple[str, l
     el_key     = os.environ.get("ELEVENLABS_API_KEY", "").strip()
     openai_key = os.environ.get("OPENAI_API_KEY", "").strip()
 
-    if el_key and openai_key:
-        try:
-            print(f"   ElevenLabs TTS [{_EL_VOICE_ID}] ...")
-            timings = _tts_elevenlabs(text, output_path, el_key)
-            return output_path, timings
-        except Exception as e:
-            print(f"   ElevenLabs Fehler: {e} — OpenAI Fallback")
-
     if openai_key:
         try:
             print(f"   OpenAI TTS [{OPENAI_VOICE}] ...")
