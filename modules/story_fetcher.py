@@ -43,27 +43,37 @@ _generation_lock = threading.Lock()
 _CLAUDE_MODEL = os.environ.get("ANTHROPIC_MODEL", "claude-sonnet-4-6")
 
 SUBREDDITS = [
+    # ─── AITA / Judgment (Gen Z Liebling) ────────────────────────────────────
     "AmItheAsshole",
     "AITAH",
+    "AmIOverreacting",
+    # ─── Fail / Cringe / Lustig ───────────────────────────────────────────────
     "tifu",
-    "confessions",
+    "mildlyinfuriating",    # Riesige Gen-Z-Community — extrem relatable
+    "facepalm",             # Cringe-Momente — viral unter 16–25
+    "Unexpected",           # Kurze überraschende Storys — sehr shareable
+    # ─── Beziehung / Dating (junge Zielgruppe) ────────────────────────────────
     "relationship_advice",
-    "entitledparents",
+    "breakups",             # Sehr relevant 16–25 — erste Trennungen
+    "confessions",
+    # ─── Jugend / Schule / Uni ────────────────────────────────────────────────
+    "teenagers",            # Direkte Gen-Z-Zielgruppe
+    "college",              # Studenten-Drama — 18–24
+    "TwoHotTakes",          # Bereits viral, jüngeres Publikum
+    # ─── Rache / Karma ───────────────────────────────────────────────────────
     "pettyrevenge",
     "maliciouscompliance",
     "ProRevenge",
-    "NuclearRevenge",
+    # ─── Drama / Entitled ────────────────────────────────────────────────────
+    "entitledparents",
+    "entitledpeople",
+    "ChoosingBeggars",
     "offmychest",
     "TrueOffMyChest",
-    "survivinginfidelity",
-    "weddingshaming",
-    "ChoosingBeggars",      # Extreme Ansprüche — sehr teilbar
-    "entitledpeople",       # Empörungsinduzierende Storys
-    "antiwork",             # Kontroverse Arbeitgeber-Storys
-    "raisedbynarcissists",  # Starke emotionale Resonanz
-    "JUSTNOMIL",            # Schwiegermutter-Drama — großes Publikum
-    "AmIOverreacting",      # Treibt Kommentar-Diskussionen an
-    "BestofRedditorUpdates",# Befriedigende Story-Abschlüsse
+    # ─── Familie / Toxisch ───────────────────────────────────────────────────
+    "raisedbynarcissists",  # Sehr stark bei Gen Z — verarbeitung toxischer Kindheit
+    # ─── Updates / Auflösungen ────────────────────────────────────────────────
+    "BestofRedditorUpdates",
 ]
 
 _USED_IDS_FILE = Path(__file__).parent.parent / "output" / "used_posts.json"
@@ -73,24 +83,26 @@ _HASHTAG_CORE = ["#fyp", "#reddit", "#tiktokdeutsch"]
 _SUBREDDIT_HASHTAGS: dict[str, list[str]] = {
     "AmItheAsshole":        ["#aita", "#drama", "#beziehung", "#meinung", "#aitatiktok", "#aitareddit"],
     "AITAH":                ["#aita", "#drama", "#beziehung", "#meinung", "#aitatiktok", "#aitareddit"],
+    "AmIOverreacting":      ["#aita", "#drama", "#beziehung", "#meinung", "#redditdeutsch"],
     "tifu":                 ["#fail", "#lustig", "#peinlich", "#oops", "#storytime"],
-    "confessions":          ["#geständnis", "#geheimnis", "#anonym", "#wahregeschichte", "#schockierend"],
+    "mildlyinfuriating":    ["#nervig", "#cringe", "#relatable", "#drama", "#genzde"],
+    "facepalm":             ["#cringe", "#facepalm", "#lustig", "#fremdschämen", "#drama"],
+    "Unexpected":           ["#unexpected", "#überraschung", "#wow", "#schockierend", "#viral"],
     "relationship_advice":  ["#beziehung", "#liebe", "#drama", "#rat", "#dating"],
-    "entitledparents":      ["#eltern", "#drama", "#kringe", "#nein", "#storytime"],
+    "breakups":             ["#trennung", "#herzschmerz", "#liebe", "#drama", "#relatable"],
+    "confessions":          ["#geständnis", "#geheimnis", "#anonym", "#wahregeschichte", "#schockierend"],
+    "teenagers":            ["#teenager", "#jugend", "#genz", "#schule", "#drama"],
+    "college":              ["#uni", "#studium", "#genz", "#drama", "#campusleben"],
+    "TwoHotTakes":          ["#twohotttakes", "#drama", "#meinung", "#beziehung", "#viral"],
     "pettyrevenge":         ["#rache", "#satisfying", "#karma", "#gerechtigkeit", "#storytime"],
     "maliciouscompliance":  ["#rache", "#satisfying", "#clever", "#karma", "#arbeit"],
     "ProRevenge":           ["#rache", "#satisfying", "#gerechtigkeit", "#karma", "#epic"],
-    "NuclearRevenge":       ["#rache", "#epic", "#satisfying", "#gerechtigkeit", "#storytime"],
+    "entitledparents":      ["#eltern", "#drama", "#cringe", "#nein", "#storytime"],
+    "entitledpeople":       ["#dreist", "#karen", "#drama", "#cringe", "#redditdeutsch"],
+    "ChoosingBeggars":      ["#choosingbeggars", "#dreistigkeit", "#drama", "#cringe", "#nope"],
     "offmychest":           ["#wahregeschichte", "#geständnis", "#emotional", "#anonym", "#storytime"],
     "TrueOffMyChest":       ["#wahregeschichte", "#geständnis", "#emotional", "#anonym", "#storytime"],
-    "survivinginfidelity":  ["#beziehung", "#drama", "#wahregeschichte", "#verrat", "#storytime"],
-    "weddingshaming":       ["#hochzeit", "#drama", "#kringe", "#wahregeschichte", "#storytime"],
-    "ChoosingBeggars":      ["#choosingbeggars", "#dreistigkeit", "#drama", "#cringe", "#nope"],
-    "entitledpeople":       ["#dreist", "#karen", "#drama", "#cringe", "#redditdeutsch"],
-    "antiwork":             ["#antiwork", "#arbeit", "#drama", "#toxisch", "#chef"],
     "raisedbynarcissists":  ["#narzisst", "#toxisch", "#family", "#drama", "#heilung"],
-    "JUSTNOMIL":            ["#schwiegermutter", "#family", "#drama", "#beziehung", "#wahregeschichte"],
-    "AmIOverreacting":      ["#aita", "#drama", "#beziehung", "#meinung", "#redditdeutsch"],
     "BestofRedditorUpdates":["#update", "#redditstories", "#drama", "#befriedigung", "#wahregeschichte"],
 }
 
@@ -193,7 +205,7 @@ def _adapt_for_tiktok_de(title: str, text: str, subreddit: str) -> dict:
     _is_long = len(text.split()) > 500
 
     if _is_long:
-        prompt = f"""Du bist ein viraler TikTok-Content-Creator für deutsches Publikum, spezialisiert auf Reddit-Story-Videos.
+        prompt = f"""Du bist ein viraler TikTok-Content-Creator für deutsches Publikum (Zielgruppe: 16–25 Jahre), spezialisiert auf Reddit-Story-Videos.
 
 Subreddit: r/{subreddit}
 Post-Titel: {title}
@@ -225,7 +237,7 @@ Antworte NUR mit diesem JSON (kein Markdown, kein Extra-Text):
   "description": "TikTok-Beschreibung mit FOMO (1-2 Sätze, Deutsch)"
 }}"""
     else:
-        prompt = f"""Du bist ein viraler TikTok-Content-Creator für deutsches Publikum, spezialisiert auf Reddit-Story-Videos.
+        prompt = f"""Du bist ein viraler TikTok-Content-Creator für deutsches Publikum (Zielgruppe: 16–25 Jahre), spezialisiert auf Reddit-Story-Videos.
 
 Subreddit: r/{subreddit}
 Post-Titel: {title}
@@ -297,46 +309,50 @@ def fetch_story(subreddit_override: str = None) -> dict:
     """
     Holt eine passende Reddit-Story und gibt sie TikTok-fertig zurück.
     Nutzt die öffentliche Reddit JSON API — kein API-Key nötig.
+    Thread-safe: Lock nur um Datei-I/O, nicht um LLM-Calls.
     """
     with _generation_lock:
-        used_ids       = _load_used_ids()
+        used_ids = _load_used_ids()
         subreddit_name = subreddit_override or random.choice(SUBREDDITS)
 
-        for attempt in range(len(SUBREDDITS)):
-            sort  = "hot" if random.random() < 0.6 else "top"
-            posts = _fetch_reddit_posts(subreddit_name, sort)
+    for attempt in range(len(SUBREDDITS)):
+        sort  = "hot" if random.random() < 0.6 else "top"
+        posts = _fetch_reddit_posts(subreddit_name, sort)
+        time.sleep(0.5)
 
-            time.sleep(1)
+        with _generation_lock:
+            used_ids = _load_used_ids()
 
-            candidates = [
-                p for p in posts
-                if not p.get("stickied", False)
-                and p.get("is_self", False)
-                and p.get("id") not in used_ids
-                and len(p.get("selftext", "")) >= 300
-                and p.get("selftext", "") not in ["[removed]", "[deleted]", ""]
-                and len(p.get("selftext", "")) <= 8000
-            ]
+        candidates = [
+            p for p in posts
+            if not p.get("stickied", False)
+            and p.get("is_self", False)
+            and p.get("id") not in used_ids
+            and len(p.get("selftext", "")) >= 300
+            and p.get("selftext", "") not in ["[removed]", "[deleted]", ""]
+            and len(p.get("selftext", "")) <= 8000
+        ]
 
-            _log.info(f"r/{subreddit_name}: {len(posts)} Posts → {len(candidates)} Kandidaten")
-            if candidates:
-                post = random.choice(candidates[:15])
-                _log.info(f"Post gewählt: r/{subreddit_name} — {post['title'][:60]}")
-                adapted = _adapt_for_tiktok_de(post["title"], post["selftext"], subreddit_name)
+        _log.info(f"r/{subreddit_name}: {len(posts)} Posts → {len(candidates)} Kandidaten")
+        if candidates:
+            post = random.choice(candidates[:15])
+            _log.info(f"Post gewählt: r/{subreddit_name} — {post['title'][:60]}")
+            adapted = _adapt_for_tiktok_de(post["title"], post["selftext"], subreddit_name)
+            with _generation_lock:
                 _save_used_id(post["id"])
-                result = {
-                    "title":       adapted["title"],
-                    "story":       adapted["story"],
-                    "description": adapted.get("description", adapted["title"]),
-                    "hashtags":    _get_hashtags(subreddit_name),
-                    "subreddit":   subreddit_name,
-                    "post_id":     post["id"],
-                }
-                if adapted.get("part2"):
-                    result["part2"] = adapted["part2"]
-                return result
+            result = {
+                "title":       adapted["title"],
+                "story":       adapted["story"],
+                "description": adapted.get("description", adapted["title"]),
+                "hashtags":    _get_hashtags(subreddit_name),
+                "subreddit":   subreddit_name,
+                "post_id":     post["id"],
+            }
+            if adapted.get("part2"):
+                result["part2"] = adapted["part2"]
+            return result
 
-            _log.info(f"Keine passenden Posts in r/{subreddit_name} — versuche nächsten")
-            subreddit_name = random.choice(SUBREDDITS)
+        _log.info(f"Keine passenden Posts in r/{subreddit_name} — versuche nächsten")
+        subreddit_name = random.choice(SUBREDDITS)
 
-        raise RuntimeError("Kein passender Reddit-Post nach mehreren Versuchen gefunden")
+    raise RuntimeError("Kein passender Reddit-Post nach mehreren Versuchen gefunden")
