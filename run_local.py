@@ -91,8 +91,9 @@ def generate_and_queue(subreddit: str = None) -> bool:
         cta = random.choice(_ctas)
         tts_text = f"{story_data['title']}. {story_data['story']} {cta}"
         words = tts_text.split()
-        if len(words) > 155:
-            tts_text = " ".join(words[:155])
+        MAX_WORDS = 130  # Sweet spot: ~47-55s
+        if len(words) > MAX_WORDS:
+            tts_text = " ".join(words[:MAX_WORDS])
             for end_char in [". ", "! ", "? "]:
                 idx = tts_text.rfind(end_char)
                 if idx > 50:
@@ -118,9 +119,17 @@ def generate_and_queue(subreddit: str = None) -> bool:
         mb = video_path.stat().st_size / 1024 / 1024
         logger.info(f"    → {video_path.name} ({mb:.1f} MB)")
 
-        # 4. Caption
+        # 4. Caption — Emoji + Frage + Hashtags
+        from video_creator import SUBREDDIT_QUESTIONS, DEFAULT_QUESTION, SUBREDDIT_MOOD
+        question   = SUBREDDIT_QUESTIONS.get(story_data["subreddit"], DEFAULT_QUESTION)
+        _emojis    = {"drama": "😤", "funny": "😂", "sad": "💔", "suspense": "👀"}
+        mood_emoji = _emojis.get(SUBREDDIT_MOOD.get(story_data["subreddit"], ""), "👀")
         description  = story_data.get("description", story_data["title"])
-        full_caption = description + "\n" + " ".join(story_data["hashtags"])
+        full_caption = (
+            f"{mood_emoji} {description}\n\n"
+            f"{question}\n\n"
+            + " ".join(story_data["hashtags"])
+        )
 
         # 5. Bunny-Queue
         logger.info("☁️   Lade in Bunny-Queue hoch...")

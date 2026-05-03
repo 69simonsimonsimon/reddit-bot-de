@@ -87,6 +87,94 @@ SUBREDDIT_QUERIES: dict[str, list[str]] = {
 
 DEFAULT_QUERIES = ["city life people", "urban lifestyle", "everyday moments"]
 
+# ── Subreddit → Hook text (first 2.5s overlay) ────────────────────────────────
+
+SUBREDDIT_HOOKS: dict[str, list[str]] = {
+    "AmItheAsshole":         ["Warte bis du hörst was sie gemacht haben… 😤", "Das wirst du nicht glauben 👀", "Das macht einen so wütend 😠"],
+    "AITAH":                 ["Warte bis du hörst was sie gemacht haben… 😤", "Die Frechheit… 😤", "Diese Person muss die Wahrheit hören 👀"],
+    "AmIOverreacting":       ["Ihre Reaktion war völlig berechtigt 👀", "Wärst DU verärgert? 👇", "Das würde jeden wütend machen 😤"],
+    "tifu":                  ["Der hat das wirklich gemacht 😂", "Größter Fail des Jahres 💀", "Ich kann nicht glauben dass das passiert ist 😂"],
+    "mildlyinfuriating":     ["Das ist so nervig 😤", "Warum machen Leute sowas?? 😤", "Das macht dich so wütend 😠"],
+    "facepalm":              ["Manche Leute lernen es nie 💀", "Die Dummheit ist unreal 🤦", "Mir fehlen die Worte 💀"],
+    "Unexpected":            ["Das hat niemand kommen sehen 😱", "Warte drauf… 👀", "Das Ende wird dich schocken 😱"],
+    "relationship_advice":   ["Diese Beziehung ist ein rotes Flag 🚩", "Würdest du bleiben? 👀", "Das muss jemand hören 💔"],
+    "breakups":              ["Das bricht einem das Herz 💔", "Manchmal reicht Liebe nicht 💔", "Die traurigste Geschichte 😢"],
+    "confessions":           ["Die haben endlich die Wahrheit gesagt… 👀", "Dieses Geheimnis ändert alles 😱", "Das musste raus 💔"],
+    "teenagers":             ["Gen Z hat das wirklich gesagt 💀", "Teenager halt… 😂", "Das ist so real 💀"],
+    "college":               ["Studentenleben trifft anders 😂", "Jeder Student kann sich das vorstellen 👀", "Das Uni-Leben 💀"],
+    "TwoHotTakes":           ["Das Internet ist gespalten 👀", "Heißer Take incoming 🔥", "Auf welcher Seite bist du? 👇"],
+    "pettyrevenge":          ["Die beste Rache überhaupt 😤", "Die hatten es verdient 🙌", "Karma arbeitet schnell 🔥"],
+    "maliciouscompliance":   ["Technisch gesehen nicht falsch 😂", "Die Regeln perfekt befolgt 💀", "Der genialste Zug 🧠"],
+    "ProRevenge":            ["Die ultimative Rache-Geschichte 🔥", "Die sind voll eskaliert 😤", "Gerechtigkeit wurde serviert 🙌"],
+    "entitledparents":       ["Karen-Energie ist real 😤", "Diese Eltern kennen keine Grenzen 😤", "Die Dreistigkeit mancher Leute 👀"],
+    "entitledpeople":        ["Manche Leute haben keine Scham 😤", "Die haben das wirklich gesagt 😤", "Die Dreistigkeit ist unreal 👀"],
+    "ChoosingBeggars":       ["Die haben das wirklich gesagt 💀", "Die Dreistigkeit… 😤", "Bettler können nicht wählerisch sein 😂"],
+    "offmychest":            ["Die haben es endlich gesagt… 💔", "Das musste gesagt werden 👀", "Das alleine zu tragen war zu viel 💔"],
+    "TrueOffMyChest":        ["Die haben es endlich gesagt… 💔", "Das ist so schwer 😢", "Die Wahrheit kommt raus 👀"],
+    "raisedbynarcissists":   ["Kein Kind verdient das 😢", "Das ist nicht okay 😤", "Endlich frei 💪"],
+    "BestofRedditorUpdates": ["Das Update das niemand erwartet hat 😱", "Warte auf das Ende 👀", "Gerechtigkeit wurde endlich serviert 🙌"],
+}
+
+DEFAULT_HOOKS = ["Warte auf das Ende 👀", "Das wirst du nicht glauben 😱", "Das ist wirklich passiert 😤"]
+
+# ── Subreddit → Comment question ──────────────────────────────────────────────
+
+SUBREDDIT_QUESTIONS: dict[str, str] = {
+    "AmItheAsshole":         "Wer hatte Unrecht? Kommentar 👇",
+    "AITAH":                 "War diese Person im Unrecht? Kommentar 👇",
+    "AmIOverreacting":       "Wärst DU verärgert? Kommentar 👇",
+    "tifu":                  "Was hättest du gemacht? Kommentar 👇",
+    "mildlyinfuriating":     "Nervt dich das auch? Kommentar 👇",
+    "facepalm":              "Was ist das Dümmste das du je gesehen hast? 👇",
+    "Unexpected":            "Hast du das kommen sehen? Kommentar 👇",
+    "relationship_advice":   "Was ist dein Rat? Kommentar 👇",
+    "breakups":              "Warst du schon mal in sowas? Kommentar 👇",
+    "confessions":           "Kannst du dich damit identifizieren? Kommentar 👇",
+    "teenagers":             "Kannst du dich damit identifizieren? Kommentar 👇",
+    "college":               "Studenten, kennt ihr das? 👇",
+    "TwoHotTakes":           "Auf welcher Seite bist du? Kommentar 👇",
+    "pettyrevenge":          "War diese Rache gerechtfertigt? Kommentar 👇",
+    "maliciouscompliance":   "Genialer Zug oder zu weit? Kommentar 👇",
+    "ProRevenge":            "War diese Rache gerechtfertigt? Kommentar 👇",
+    "entitledparents":       "Wie hättest du reagiert? Kommentar 👇",
+    "entitledpeople":        "Hast du so jemanden schon getroffen? 👇",
+    "ChoosingBeggars":       "Wie hättest du geantwortet? Kommentar 👇",
+    "offmychest":            "Hast du dich schon mal so gefühlt? Kommentar 👇",
+    "TrueOffMyChest":        "Kannst du dich damit identifizieren? Kommentar 👇",
+    "raisedbynarcissists":   "Du bist nicht allein. Kommentar 💙",
+    "BestofRedditorUpdates": "Hast du das Ende erwartet? Kommentar 👇",
+}
+
+DEFAULT_QUESTION = "Was denkst du? Kommentar 👇"
+
+# ── Subreddit → Music mood ────────────────────────────────────────────────────
+
+SUBREDDIT_MOOD: dict[str, str] = {
+    "AmItheAsshole":         "drama",
+    "AITAH":                 "drama",
+    "AmIOverreacting":       "drama",
+    "tifu":                  "funny",
+    "mildlyinfuriating":     "drama",
+    "facepalm":              "funny",
+    "Unexpected":            "suspense",
+    "relationship_advice":   "sad",
+    "breakups":              "sad",
+    "confessions":           "sad",
+    "teenagers":             "funny",
+    "college":               "funny",
+    "TwoHotTakes":           "drama",
+    "pettyrevenge":          "suspense",
+    "maliciouscompliance":   "funny",
+    "ProRevenge":            "suspense",
+    "entitledparents":       "drama",
+    "entitledpeople":        "drama",
+    "ChoosingBeggars":       "funny",
+    "offmychest":            "sad",
+    "TrueOffMyChest":        "sad",
+    "raisedbynarcissists":   "sad",
+    "BestofRedditorUpdates": "suspense",
+}
+
 
 def _is_valid_video(path: Path) -> bool:
     try:
@@ -427,16 +515,72 @@ def _make_progress_bar(total_dur: float):
 
 # ── Music ─────────────────────────────────────────────────────────────────────
 
-def _mix_background_music(speech: AudioFileClip, duration: float) -> AudioFileClip:
-    tracks = (
-        list(MUSIC_DIR.glob("*.mp3")) + list(MUSIC_DIR.glob("*.wav"))
-        + list(MUSIC_DIR.glob("*.m4a")) + list(MUSIC_DIR.glob("*.ogg"))
-    )
+def _render_hook_frame(text: str) -> np.ndarray:
+    """Big centered hook text with dark semi-transparent background box."""
+    font_size = 62
+    font = ImageFont.truetype(BOLD, font_size)
+    max_w = WIDTH - 80
+    lines = _wrap(text, font, max_w)
+    line_h = font_size + 16
+    pad_x, pad_y = 40, 28
+    total_w = WIDTH
+    total_h = len(lines) * line_h + pad_y * 2
+
+    img = Image.new("RGBA", (total_w, total_h), (0, 0, 0, 0))
+    # dark box
+    box = Image.new("RGBA", (total_w, total_h), (0, 0, 0, 185))
+    img.paste(box, (0, 0))
+    draw = ImageDraw.Draw(img)
+
+    for i, line in enumerate(lines):
+        lw = int(font.getlength(line))
+        x = (total_w - lw) // 2
+        y = pad_y + i * line_h
+        draw.text((x, y), line, font=font, fill=(255, 255, 255, 255),
+                  stroke_width=3, stroke_fill=(0, 0, 0, 255))
+    return np.array(img)
+
+
+def _render_comment_cta_frame(question: str) -> np.ndarray:
+    """Comment-bait question shown at the end of the video."""
+    font_size = 54
+    font = ImageFont.truetype(BOLD, font_size)
+    max_w = WIDTH - 80
+    lines = _wrap(question, font, max_w)
+    line_h = font_size + 14
+    pad_x, pad_y = 40, 24
+    total_w = WIDTH
+    total_h = len(lines) * line_h + pad_y * 2
+
+    img = Image.new("RGBA", (total_w, total_h), (0, 0, 0, 0))
+    box = Image.new("RGBA", (total_w, total_h), (0, 0, 0, 170))
+    img.paste(box, (0, 0))
+    draw = ImageDraw.Draw(img)
+
+    for i, line in enumerate(lines):
+        lw = int(font.getlength(line))
+        x = (total_w - lw) // 2
+        y = pad_y + i * line_h
+        draw.text((x, y), line, font=font, fill=(255, 230, 0, 255),
+                  stroke_width=3, stroke_fill=(0, 0, 0, 255))
+    return np.array(img)
+
+
+def _mix_background_music(speech: AudioFileClip, duration: float, mood: str = "") -> AudioFileClip:
+    # Try mood subfolder first, then root music dir
+    mood_dir = MUSIC_DIR / mood if mood else None
+    tracks = []
+    if mood_dir and mood_dir.exists():
+        tracks = (list(mood_dir.glob("*.mp3")) + list(mood_dir.glob("*.wav"))
+                  + list(mood_dir.glob("*.m4a")) + list(mood_dir.glob("*.ogg")))
+    if not tracks:
+        tracks = (list(MUSIC_DIR.glob("*.mp3")) + list(MUSIC_DIR.glob("*.wav"))
+                  + list(MUSIC_DIR.glob("*.m4a")) + list(MUSIC_DIR.glob("*.ogg")))
     if not tracks:
         return speech
     try:
         track_path = random.choice(tracks)
-        print(f"   Musik: {track_path.name}")
+        print(f"   Musik [{mood or 'random'}]: {track_path.name}")
         music = AudioFileClip(str(track_path))
         music = music.with_effects([afx.AudioLoop(duration=duration)])
         music = music.with_effects([
@@ -464,6 +608,11 @@ def create_video(
     audio     = AudioFileClip(audio_path)
     total_dur = audio.duration + 0.5
 
+    # Derive hook, comment question and mood from subreddit
+    hook_text       = random.choice(SUBREDDIT_HOOKS.get(subreddit, DEFAULT_HOOKS))
+    comment_question = SUBREDDIT_QUESTIONS.get(subreddit, DEFAULT_QUESTION)
+    mood             = SUBREDDIT_MOOD.get(subreddit, "")
+
     # Fetch topic-relevant Pexels videos
     pexels_key  = os.environ.get("PEXELS_API_KEY", "").strip()
     video_paths = []
@@ -478,7 +627,19 @@ def create_video(
     background = _make_multi_background(video_paths, total_dur)
     clips      = [background]
 
-    # Minimal header
+    # ── Hook overlay: first 2.5 seconds ──────────────────────────────────────
+    hook_dur = min(2.5, total_dur * 0.15)
+    hook_img = _render_hook_frame(hook_text)
+    hook_h   = hook_img.shape[0]
+    clips.append(
+        ImageClip(hook_img)
+        .with_start(0)
+        .with_duration(hook_dur)
+        .with_position(("center", HEIGHT // 2 - hook_h // 2))
+        .with_effects([vfx.FadeIn(0.2), vfx.FadeOut(0.3)])
+    )
+
+    # Minimal header (fades in after hook)
     header_img = _render_header(subreddit, title)
     clips.append(
         ImageClip(header_img)
@@ -490,6 +651,19 @@ def create_video(
     # Karaoke — no box
     if word_timings:
         clips.extend(_make_karaoke_clips(word_timings, total_dur, group_size=4))
+
+    # ── Comment-bait question: last 3 seconds ─────────────────────────────────
+    cta_dur   = min(3.0, total_dur * 0.2)
+    cta_start = max(0, total_dur - cta_dur)
+    cta_img   = _render_comment_cta_frame(comment_question)
+    cta_h     = cta_img.shape[0]
+    clips.append(
+        ImageClip(cta_img)
+        .with_start(cta_start)
+        .with_duration(cta_dur)
+        .with_position(("center", HEIGHT // 2 + 80))
+        .with_effects([vfx.FadeIn(0.3)])
+    )
 
     # Watermark — text only
     wm_img     = _render_watermark()
@@ -504,7 +678,7 @@ def create_video(
     # White 2px progress bar
     clips.append(_make_progress_bar(total_dur))
 
-    mixed_audio = _mix_background_music(audio, total_dur)
+    mixed_audio = _mix_background_music(audio, total_dur, mood=mood)
     video = CompositeVideoClip(clips, size=(WIDTH, HEIGHT)).with_audio(mixed_audio)
     video.write_videofile(
         output_path, fps=30, codec="libx264", audio_codec="aac", logger=None,
