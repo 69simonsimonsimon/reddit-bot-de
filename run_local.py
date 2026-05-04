@@ -131,7 +131,7 @@ def generate_and_queue(subreddit: str = None) -> bool:
         cta = random.choice(_ctas)
         tts_text = f"{story_data['title']}. {story_data['story']} {cta}"
         words = tts_text.split()
-        MAX_WORDS = 130  # Sweet spot: ~47-55s
+        MAX_WORDS = 165  # TikTok Monetization: 60+ Sekunden
         if len(words) > MAX_WORDS:
             tts_text = " ".join(words[:MAX_WORDS])
             for end_char in [". ", "! ", "? "]:
