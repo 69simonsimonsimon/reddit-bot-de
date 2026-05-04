@@ -3,11 +3,6 @@ import os
 import re
 
 import edge_tts
-import requests as _requests
-
-# ElevenLabs: Adam — tief, gut für Storytelling auf Deutsch
-_EL_VOICE_ID = os.environ.get("ELEVENLABS_VOICE_ID", "pNInz6obpgDQGcFmaJgB")
-_EL_MODEL    = "eleven_multilingual_v2"
 
 OPENAI_VOICE = "onyx"
 OPENAI_MODEL = "tts-1"
@@ -19,28 +14,6 @@ _MOOD_VOICE: dict[str, tuple[str, float]] = {
     "sad":      ("nova",    0.88),   # sanft, empathisch, langsamer
     "suspense": ("fable",   0.95),   # mysteriöser Erzähler, etwas langsamer
 }
-
-
-def _tts_elevenlabs(text: str, audio_path: str, api_key: str) -> list[dict]:
-    url  = f"https://api.elevenlabs.io/v1/text-to-speech/{_EL_VOICE_ID}"
-    resp = _requests.post(
-        url,
-        headers={"xi-api-key": api_key, "Content-Type": "application/json"},
-        json={
-            "text":     text,
-            "model_id": _EL_MODEL,
-            "voice_settings": {"stability": 0.45, "similarity_boost": 0.80, "style": 0.30, "use_speaker_boost": True},
-        },
-        timeout=120,
-    )
-    resp.raise_for_status()
-    with open(audio_path, "wb") as f:
-        f.write(resp.content)
-    from openai import OpenAI
-    wc = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
-    with open(audio_path, "rb") as f:
-        tr = wc.audio.transcriptions.create(model="whisper-1", file=f, response_format="verbose_json", timestamp_granularities=["word"])
-    return [{"word": w.word.strip(), "start": w.start, "end": w.end} for w in (tr.words or [])]
 
 
 def _tts_openai(text: str, audio_path: str, api_key: str,
@@ -88,7 +61,6 @@ def text_to_speech(text: str, output_path: str, topic: str = "",
     OpenAI TTS (stimmungsabhängige Stimme + Tempo) → Edge TTS Fallback.
     mood: 'drama' | 'funny' | 'sad' | 'suspense' | ''
     """
-    el_key     = os.environ.get("ELEVENLABS_API_KEY", "").strip()
     openai_key = os.environ.get("OPENAI_API_KEY", "").strip()
 
     if openai_key:
