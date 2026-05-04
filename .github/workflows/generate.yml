@@ -1,6 +1,8 @@
 name: Generate Reddit Videos (DE)
 
 on:
+  schedule:
+    - cron: '30 6,10,15,19 * * *'
   workflow_dispatch:
 
 jobs:
