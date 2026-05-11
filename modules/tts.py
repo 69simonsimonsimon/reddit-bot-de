@@ -5,7 +5,7 @@ import re
 import edge_tts
 
 OPENAI_VOICE = "onyx"
-OPENAI_MODEL = "tts-1"
+OPENAI_MODEL = "tts-1-hd"
 
 # Mood → (voice, speed) — verschiedene Stimme + Tempo pro Story-Typ
 _MOOD_VOICE: dict[str, tuple[str, float]] = {

@@ -42,7 +42,8 @@ _log = logging.getLogger("story_fetcher")
 
 _generation_lock = threading.Lock()
 
-_CLAUDE_MODEL = os.environ.get("ANTHROPIC_MODEL", "claude-sonnet-4-6")
+_CLAUDE_MODEL    = os.environ.get("ANTHROPIC_MODEL", "claude-opus-4-5")
+_CLAUDE_QA_MODEL = "claude-sonnet-4-5"
 
 SUBREDDITS = [
     # ─── AITA / Judgment (Gen Z Liebling) ────────────────────────────────────
@@ -200,6 +201,53 @@ def _llm_call(prompt: str, max_tokens: int = 1800) -> str:
     return resp.choices[0].message.content.strip()
 
 
+def _llm_call_review(prompt: str, max_tokens: int = 200) -> str:
+    """Schneller Sonnet-Review — billig, prüft nur Hook-Qualität."""
+    import anthropic as _anthropic
+    anthropic_key = os.environ.get("ANTHROPIC_API_KEY", "").strip()
+    if not anthropic_key:
+        return '{"score": 8, "passes": true, "feedback": ""}'
+    try:
+        client = _anthropic.Anthropic(api_key=anthropic_key)
+        msg = client.messages.create(
+            model=_CLAUDE_QA_MODEL,
+            max_tokens=max_tokens,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        return msg.content[0].text.strip()
+    except Exception:
+        return '{"score": 8, "passes": true, "feedback": ""}'
+
+
+def _qa_review_story(title: str, story: str) -> tuple[bool, str]:
+    """
+    Sonnet bewertet den Opus-adaptierten Story-Script.
+    Gibt (besteht_qa, feedback) zurück — besteht wenn Score >= 7.
+    """
+    prompt = f"""Bewerte diesen TikTok-Reddit-Story-Script von 1–10:
+
+Titel: {title}
+Script (erste 300 Zeichen): {story[:300]}
+
+Kriterien:
+1. Hook-Stärke: Beginnt der erste Satz mit dem schockierendsten/emotionalsten Moment?
+2. Engagement: Würden 16–25-Jährige dieses Video bis zum Ende schauen?
+3. Titeltauglichkeit: Ist der Titel emotional und macht neugierig?
+
+Antworte NUR mit JSON: {{"score": 7, "passes": true, "feedback": "Ein Satz Feedback"}}
+Besteht wenn score >= 7."""
+
+    raw = _llm_call_review(prompt, max_tokens=150)
+    try:
+        match = re.search(r'\{.*\}', raw, re.DOTALL)
+        if match:
+            result = json.loads(match.group(0))
+            return bool(result.get("passes", True)), result.get("feedback", "")
+    except Exception:
+        pass
+    return True, ""
+
+
 def _adapt_for_tiktok_de(title: str, text: str, subreddit: str) -> dict:
     """Bereitet die Story für TikTok auf — vollständig, auf Deutsch.
     Bei langen Posts (>500 Wörter) wird part1 + part2 für zwei Videos zurückgegeben."""
@@ -303,6 +351,34 @@ Antworte NUR mit diesem JSON-Format (kein Markdown, kein Extra-Text):
             last_end = max(data["story"].rfind(". "), data["story"].rfind("! "), data["story"].rfind("? "))
             if last_end > 50:
                 data["story"] = data["story"][:last_end + 1]
+
+    # QA-Review: Sonnet prüft Hook + Engagement
+    qa_passes, qa_feedback = _qa_review_story(data.get("title", ""), data.get("story", ""))
+    if not qa_passes:
+        _log.info(f"QA-Review nicht bestanden: {qa_feedback} — verfeinere Hook mit Opus…")
+        refine_prompt = f"""Verbessere Titel und ersten Satz dieser Reddit-Story für TikTok.
+
+QA-Feedback: {qa_feedback}
+
+Aktueller Titel: {data.get('title', '')}
+Aktueller erster Satz: {data.get('story', '')[:200]}
+
+Gib NUR JSON zurück: {{"title": "verbesserter Titel", "first_sentence": "verbesserter erster Satz"}}"""
+        try:
+            raw2 = _llm_call(refine_prompt, max_tokens=300)
+            match2 = re.search(r'\{.*\}', raw2, re.DOTALL)
+            if match2:
+                refined = json.loads(match2.group(0))
+                if refined.get("title"):
+                    data["title"] = refined["title"]
+                if refined.get("first_sentence") and data.get("story"):
+                    sentences = data["story"].split(". ", 1)
+                    data["story"] = refined["first_sentence"] + (". " + sentences[1] if len(sentences) > 1 else "")
+            _log.info("Hook verfeinert.")
+        except Exception as e:
+            _log.warning(f"Hook-Verfeinerung fehlgeschlagen: {e}")
+    else:
+        _log.info("QA-Review bestanden.")
 
     return data
 
