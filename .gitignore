@@ -2,8 +2,9 @@
 .env
 *.env
 
-# Output / generated files
-output/
+# Output / generated files — History-Datei wird committed (zuverlässige Persistenz)
+output/*
+!output/used_posts.json
 logs/
 
 # Python cache
