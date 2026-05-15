@@ -284,7 +284,8 @@ Antworte NUR mit diesem JSON (kein Markdown, kein Extra-Text):
   "title": "Schockierender Titel (max. 8 Wörter, Deutsch)",
   "part1": "Teil 1 (~65 Wörter, endet mit Cliffhanger, Deutsch)",
   "part2": "Teil 2 (~200 Wörter, vollständige Auflösung, Deutsch)",
-  "description": "TikTok-Beschreibung mit FOMO (1-2 Sätze, Deutsch)"
+  "description": "TikTok-Beschreibung mit FOMO (1-2 Sätze, Deutsch)",
+  "visual_query": "2-3 englische Suchbegriffe für ein CINEMATIC STOCKVIDEO das zur emotionalen Stimmung der Story passt. Muss real filmbar sein. Beispiele: 'couple arguing kitchen', 'person crying window rain', 'friends laughing city street', 'office confrontation angry', 'lonely person sunset'. NICHT abstrakt — konkrete, filmische Szenen."
 }}"""
     else:
         prompt = f"""Du bist ein viraler TikTok-Content-Creator für deutsches Publikum (Zielgruppe: 16–25 Jahre), spezialisiert auf Reddit-Story-Videos.
@@ -305,7 +306,8 @@ Antworte NUR mit diesem JSON-Format (kein Markdown, kein Extra-Text):
 {{
   "title": "Schockierender/rätselhafter Titel (max. 8 Wörter, Deutsch)",
   "story": "Die vollständige Story (max. 350 Wörter, Deutsch)",
-  "description": "FOMO-erzeugende Beschreibung (1-2 Sätze, Deutsch)"
+  "description": "FOMO-erzeugende Beschreibung (1-2 Sätze, Deutsch)",
+  "visual_query": "2-3 englische Suchbegriffe für ein CINEMATIC STOCKVIDEO das zur emotionalen Stimmung der Story passt. Muss real filmbar sein. Beispiele: 'couple arguing kitchen', 'person crying window rain', 'friends laughing city street', 'office confrontation angry', 'lonely person sunset'. NICHT abstrakt — konkrete, filmische Szenen."
 }}"""
 
     raw   = _llm_call(prompt, max_tokens=1800)
@@ -419,12 +421,13 @@ def fetch_story(subreddit_override: str = None) -> dict:
             with _generation_lock:
                 _save_used_id(post["id"])
             result = {
-                "title":       adapted["title"],
-                "story":       adapted["story"],
-                "description": adapted.get("description", adapted["title"]),
-                "hashtags":    _get_hashtags(subreddit_name),
-                "subreddit":   subreddit_name,
-                "post_id":     post["id"],
+                "title":        adapted["title"],
+                "story":        adapted["story"],
+                "description":  adapted.get("description", adapted["title"]),
+                "hashtags":     _get_hashtags(subreddit_name),
+                "subreddit":    subreddit_name,
+                "post_id":      post["id"],
+                "visual_query": adapted.get("visual_query", ""),
             }
             if adapted.get("part2"):
                 result["part2"] = adapted["part2"]
